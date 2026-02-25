@@ -22,40 +22,45 @@ body {
   position: relative;
 }
 
-/* Scientific animated background (DNA, molecules) */
+/* Scientific background using CSS circles and lines */
 body::before {
   content: "";
   position: absolute;
-  top: 0; left: 0;
   width: 100%; height: 100%;
-  background-image: url('data:image/svg+xml;utf8,\
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">\
-  <defs>\
-    <linearGradient id="dnaGradient" x1="0" y1="0" x2="1" y2="1">\
-      <stop offset="0%" stop-color="cyan" stop-opacity="0.3"/>\
-      <stop offset="100%" stop-color="magenta" stop-opacity="0.3"/>\
-    </linearGradient>\
-  </defs>\
-  <path d="M50,10 C70,50 130,50 150,10 S230, -30 250,10" stroke="url(#dnaGradient)" stroke-width="2" fill="none"/>\
-  <path d="M60,10 C80,50 140,50 160,10 S240, -30 260,10" stroke="url(#dnaGradient)" stroke-width="2" fill="none"/>\
-  <circle cx="50" cy="10" r="3" fill="cyan" fill-opacity="0.2"/>\
-  <circle cx="150" cy="10" r="3" fill="magenta" fill-opacity="0.2"/>\
-  <circle cx="250" cy="10" r="3" fill="yellow" fill-opacity="0.2"/>\
-  <circle cx="100" cy="40" r="2.5" fill="cyan" fill-opacity="0.15"/>\
-  <circle cx="200" cy="40" r="2.5" fill="magenta" fill-opacity="0.15"/>\
-</svg>');
-  background-repeat: repeat;
-  animation: floatBackground 60s linear infinite;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 2px, transparent 2px) repeat;
+  background-size: 60px 60px;
   z-index: 0;
 }
 
-@keyframes floatBackground {
-  0% { transform: translate(0,0); }
-  50% { transform: translate(50px,-50px); }
-  100% { transform: translate(0,0); }
+.helix {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  left: 20%;
+  background: repeating-linear-gradient(
+    to bottom,
+    cyan 0px,
+    cyan 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  animation: moveHelix 6s linear infinite;
+  opacity: 0.3;
+}
+.helix:nth-child(2) {
+  left: 40%;
+  background: repeating-linear-gradient(to bottom, magenta 0 3px, transparent 3px 6px);
+}
+.helix:nth-child(3) {
+  left: 60%;
+  background: repeating-linear-gradient(to bottom, yellow 0 5px, transparent 5px 10px);
 }
 
-/* Profile container */
+@keyframes moveHelix {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-60px); }
+}
+
 .profile-container {
   position: relative;
   z-index: 1;
@@ -100,13 +105,6 @@ input[type="text"] {
   background: rgba(255,255,255,0.95);
   color: #0a1f44;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-input[type="text"]:focus {
-  transform: scale(1.02);
-  box-shadow: 0 0 10px rgba(0,128,255,0.4);
-  outline: none;
 }
 
 button {
@@ -115,19 +113,18 @@ button {
   margin-top: 12px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(45deg, #0a1f44, #00214d);
-  color: #fff;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  color: #0a1f44;
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 button:hover {
-  background: linear-gradient(45deg, #00214d, #004080);
+  background: linear-gradient(45deg, #FFC700, #FF8C00);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 @media screen and (max-width: 400px){
@@ -139,6 +136,11 @@ button:hover {
 </head>
 
 <body>
+
+<!-- Helix lines -->
+<div class="helix"></div>
+<div class="helix"></div>
+<div class="helix"></div>
 
 <div class="profile-container">
   <div class="profile-title">Student Profile</div>
