@@ -10,7 +10,235 @@
 <meta charset="UTF-8">
 <title>Student Profile</title>
 
+<!-- Firebase SDKs --><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Profile</title>
+
 <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<style>
+/* Background: deep dark blue */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0B1E5B; /* pure deep dark blue */
+  overflow: auto;
+}
+
+/* Profile container: pastel yellow → pastel blue */
+.profile-container {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, #FFF9C4, #B3E5FC);
+  border-radius: 25px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 380px;
+  max-width: 90%;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  color: #0a1f44;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #FFD54F;
+}
+
+/* Title */
+.profile-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px #00000033;
+}
+
+/* Profile picture */
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid #FFD54F;
+  box-shadow: 0 0 10px #FFD54F33;
+}
+
+/* Email & tracking */
+h2, p {
+  margin: 10px 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Username input */
+#usernameInput {
+  width: 90%;
+  padding: 14px;
+  margin: 10px auto;
+  border-radius: 12px;
+  border: 1px solid #FFD54F;
+  font-size: 16px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7);
+  color: #0a1f44;
+  outline: none;
+  box-shadow: 0 0 8px #FFD54F33;
+}
+
+/* Buttons: pastel gradient matching container */
+button {
+  width: 90%;
+  padding: 14px;
+  margin-top: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #FFF59D, #81D4FA);
+  color: #0a1f44;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(45deg, #FFF176, #4FC3F7);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* MOBILE RESPONSIVE */
+@media screen and (max-width: 600px) {
+  .profile-container {
+    width: 95%;
+    padding: 50px 25px;
+  }
+  .profile-title {
+    font-size: 28px;
+  }
+  .profile-pic {
+    width: 140px;
+    height: 140px;
+  }
+  #usernameInput, button {
+    font-size: 18px;
+    padding: 16px;
+  }
+  h2, p {
+    font-size: 17px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="profile-container">
+  <div class="profile-title">Student Profile</div>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+       id="profilePic"
+       class="profile-pic"
+       alt="Student Account Icon">
+
+  <h2 id="email">Email</h2>
+  <p id="tracking">Tracking Number</p>
+
+  <input type="text" id="usernameInput" placeholder="Enter Username">
+
+  <button id="saveUsernameBtn">Save Username</button>
+  <button id="homepageBtn">Proceed to Homepage</button>
+  <button id="logoutBtn">Log Out</button>
+</div>
+
+<script>
+// Firebase setup
+const firebaseConfig = {
+  apiKey: "AIzaSyAal-tUtavmqhKDGfY5ETXTanvBoieN304",
+  authDomain: "student-document-request-4cd93.firebaseapp.com",
+  projectId: "student-document-request-4cd93",
+  storageBucket: "student-document-request-4cd93.appspot.com",
+  messagingSenderId: "646537888403",
+  appId: "1:646537888403:web:b9c8826a2ae92f073f4366",
+  measurementId: "G-TQQ8779L4G"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser;
+
+function generateTrackingNumber() {
+  const randomDigits = Math.floor(1000 + Math.random() * 9000);
+  const year = new Date().getFullYear();
+  return `PG-${year}-${randomDigits}`;
+}
+
+auth.onAuthStateChanged(async (user) => {
+  if (!user) {
+    window.location.href = "https://pginhsrequest.github.io/login/";
+    return;
+  }
+  currentUser = user;
+
+  try {
+    const userDocRef = db.collection("users").doc(user.uid);
+    const userDoc = await userDocRef.get();
+    let trackingNumber;
+
+    if (userDoc.exists) {
+      const data = userDoc.data();
+      document.getElementById("email").innerText = data.email || user.email;
+
+      if (data.trackingNumber) trackingNumber = data.trackingNumber;
+      else {
+        trackingNumber = generateTrackingNumber();
+        await userDocRef.set({ trackingNumber }, { merge: true });
+      }
+
+      document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
+      if (data.username) document.getElementById("usernameInput").value = data.username;
+
+    } else {
+      trackingNumber = generateTrackingNumber();
+      await userDocRef.set({ email: user.email, trackingNumber });
+      document.getElementById("email").innerText = user.email;
+      document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
+    }
+
+  } catch (error) { console.error(error); alert("Failed to load profile data."); }
+});
+
+document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
+  const username = document.getElementById("usernameInput").value.trim();
+  if (!username) { alert("Please enter a username!"); return; }
+
+  try {
+    await db.collection("users").doc(currentUser.uid).set({ username }, { merge: true });
+    alert("Username saved successfully!");
+  } catch (error) { alert("Error saving username: " + error.message); }
+});
+
+document.getElementById("homepageBtn").addEventListener("click", () => {
+  window.location.href = "https://pginhsrequest.wordpress.com/";
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  auth.signOut().then(() => {
+    window.location.href = "https://pginhsrequest.github.io/login/";
+  }).catch(error => { alert("Error logging out: " + error.message); });
+});
+</script>
+
+</body>
+</html>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
