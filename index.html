@@ -18,32 +18,44 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding: 10px;
   overflow: hidden;
   position: relative;
 }
 
-/* Animated techy floating shapes and nodes */
+/* Scientific animated background (DNA, molecules) */
 body::before {
   content: "";
   position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
-  background: radial-gradient(circle at 20% 20%, rgba(0,255,255,0.05), transparent 50%),
-              radial-gradient(circle at 80% 30%, rgba(255,255,0,0.05), transparent 50%),
-              radial-gradient(circle at 50% 80%, rgba(255,0,255,0.05), transparent 50%);
-  animation: floatShapes 60s linear infinite;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">\
+  <defs>\
+    <linearGradient id="dnaGradient" x1="0" y1="0" x2="1" y2="1">\
+      <stop offset="0%" stop-color="cyan" stop-opacity="0.3"/>\
+      <stop offset="100%" stop-color="magenta" stop-opacity="0.3"/>\
+    </linearGradient>\
+  </defs>\
+  <path d="M50,10 C70,50 130,50 150,10 S230, -30 250,10" stroke="url(#dnaGradient)" stroke-width="2" fill="none"/>\
+  <path d="M60,10 C80,50 140,50 160,10 S240, -30 260,10" stroke="url(#dnaGradient)" stroke-width="2" fill="none"/>\
+  <circle cx="50" cy="10" r="3" fill="cyan" fill-opacity="0.2"/>\
+  <circle cx="150" cy="10" r="3" fill="magenta" fill-opacity="0.2"/>\
+  <circle cx="250" cy="10" r="3" fill="yellow" fill-opacity="0.2"/>\
+  <circle cx="100" cy="40" r="2.5" fill="cyan" fill-opacity="0.15"/>\
+  <circle cx="200" cy="40" r="2.5" fill="magenta" fill-opacity="0.15"/>\
+</svg>');
+  background-repeat: repeat;
+  animation: floatBackground 60s linear infinite;
   z-index: 0;
 }
 
-@keyframes floatShapes {
-  0% { transform: rotate(0deg) translate(0,0); }
-  50% { transform: rotate(180deg) translate(50px,-50px); }
-  100% { transform: rotate(360deg) translate(0,0); }
+@keyframes floatBackground {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(50px,-50px); }
+  100% { transform: translate(0,0); }
 }
 
+/* Profile container */
 .profile-container {
   position: relative;
   z-index: 1;
@@ -54,7 +66,6 @@ body::before {
   width: 100%;
   max-width: 420px;
   text-align: center;
-  box-sizing: border-box;
   color: #0a1f44;
 }
 
@@ -85,7 +96,6 @@ input[type="text"] {
   margin: 12px 0;
   border-radius: 12px;
   border: none;
-  box-sizing: border-box;
   font-size: 18px;
   background: rgba(255,255,255,0.95);
   color: #0a1f44;
@@ -99,7 +109,6 @@ input[type="text"]:focus {
   outline: none;
 }
 
-/* Gradient tech buttons */
 button {
   width: 100%;
   padding: 16px;
@@ -176,7 +185,6 @@ auth.onAuthStateChanged(async (user) => {
     window.location.href = "https://pginhsrequest.github.io/login/";
     return;
   }
-
   currentUser = user;
 
   try {
@@ -188,33 +196,23 @@ auth.onAuthStateChanged(async (user) => {
       const data = userDoc.data();
       document.getElementById("email").innerText = data.email || user.email;
 
-      if (data.trackingNumber) {
-        trackingNumber = data.trackingNumber;
-      } else {
+      if (data.trackingNumber) trackingNumber = data.trackingNumber;
+      else {
         trackingNumber = generateTrackingNumber();
-        await userDocRef.set({ trackingNumber: trackingNumber }, { merge: true });
+        await userDocRef.set({ trackingNumber }, { merge: true });
       }
 
       document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
-
-      if (data.username) {
-        document.getElementById("usernameInput").value = data.username;
-      }
+      if (data.username) document.getElementById("usernameInput").value = data.username;
 
     } else {
       trackingNumber = generateTrackingNumber();
-      await userDocRef.set({
-        email: user.email,
-        trackingNumber: trackingNumber
-      });
+      await userDocRef.set({ email: user.email, trackingNumber });
       document.getElementById("email").innerText = user.email;
       document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
     }
 
-  } catch (error) {
-    console.error("Error loading user data:", error);
-    alert("Failed to load profile data.");
-  }
+  } catch (error) { console.error(error); alert("Failed to load profile data."); }
 });
 
 document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
@@ -222,7 +220,7 @@ document.getElementById("saveUsernameBtn").addEventListener("click", async () =>
   if (!username) { alert("Please enter a username!"); return; }
 
   try {
-    await db.collection("users").doc(currentUser.uid).set({ username: username }, { merge: true });
+    await db.collection("users").doc(currentUser.uid).set({ username }, { merge: true });
     alert("Username saved successfully!");
   } catch (error) { alert("Error saving username: " + error.message); }
 });
