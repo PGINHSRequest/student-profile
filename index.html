@@ -113,14 +113,14 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 let currentUser;
 
-// Function to generate unique tracking number
+// Generate unique tracking number
 function generateTrackingNumber() {
   const randomDigits = Math.floor(1000 + Math.random() * 9000);
   const year = new Date().getFullYear();
   return `PG-${year}-${randomDigits}`;
 }
 
-// Listen for auth state changes
+// Listen for authentication state
 auth.onAuthStateChanged(async (user) => {
   if (!user) {
     // Redirect if not logged in
@@ -139,7 +139,7 @@ auth.onAuthStateChanged(async (user) => {
       const data = userDoc.data();
       document.getElementById("email").innerText = data.email || user.email;
 
-      // Generate tracking number if it doesn't exist
+      // Generate tracking number if missing
       if (data.trackingNumber) {
         trackingNumber = data.trackingNumber;
       } else {
@@ -154,7 +154,7 @@ auth.onAuthStateChanged(async (user) => {
       }
 
     } else {
-      // New user doc
+      // New user
       trackingNumber = generateTrackingNumber();
       await userDocRef.set({
         email: user.email,
@@ -170,7 +170,7 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-// Save username
+// Save username to Firestore
 document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
   const username = document.getElementById("usernameInput").value.trim();
   if (!username) {
@@ -189,7 +189,7 @@ document.getElementById("saveUsernameBtn").addEventListener("click", async () =>
   }
 });
 
-// Go to homepage
+// Redirect to homepage
 document.getElementById("homepageBtn").addEventListener("click", () => {
   window.location.href = "https://pginhsrequest.wordpress.com/";
 });
