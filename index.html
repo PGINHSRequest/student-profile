@@ -10,7 +10,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
-/* Body with blue gradient and starry background */
+/* Body with dark blue background and stars */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -18,34 +18,35 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, #0a1f44, #1a3b70); /* dark to lighter blue */
-  position: relative;
+  background: #0a1f44; /* dark blue */
   overflow: hidden;
+  position: relative;
 }
 
-/* Stars as light blue dots */
-body::before {
-  content: "";
+/* Star layer */
+.stars {
   position: absolute;
   width: 200%;
   height: 200%;
   background: transparent;
-  box-shadow:
-    10px 20px #a0c4ff, 50px 80px #cce7ff, 90px 40px #a0c4ff, 130px 160px #cce7ff,
-    180px 60px #a0c4ff, 220px 200px #cce7ff, 270px 90px #a0c4ff, 310px 180px #cce7ff,
-    360px 40px #a0c4ff, 400px 150px #cce7ff, 450px 70px #a0c4ff, 500px 220px #cce7ff,
-    550px 50px #a0c4ff, 600px 180px #cce7ff, 650px 120px #a0c4ff, 700px 200px #cce7ff,
-    750px 90px #a0c4ff, 800px 170px #cce7ff;
-  background-repeat: repeat;
   z-index: 0;
-  opacity: 0.7;
+  pointer-events: none;
 }
 
-/* PROFILE BOX WITH SKY BLUE → YELLOW GRADIENT */
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #a0c4ff;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* Profile box with sky blue → yellow gradient */
 .profile-container {
   position: relative;
   z-index: 1;
-  background: linear-gradient(135deg, #87CEFA, #FFF47F); /* sky blue → yellow */
+  background: linear-gradient(135deg, #87CEFA, #FFF47F);
   border-radius: 20px;
   padding: 40px 30px;
   text-align: center;
@@ -78,7 +79,7 @@ h2, p {
   font-weight: bold;
 }
 
-/* Centered username input */
+/* Username input */
 #usernameInput {
   width: 80%;
   padding: 12px;
@@ -98,7 +99,7 @@ button {
   font-size: 16px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(45deg, #87CEFA, #00BFFF); 
+  background: linear-gradient(45deg, #87CEFA, #00BFFF);
   color: #0a1f44;
   cursor: pointer;
   font-weight: bold;
@@ -111,8 +112,8 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* MOBILE RESPONSIVE */
-@media screen and (max-width: 500px){
+/* Mobile responsive */
+@media screen and (max-width: 500px) {
   .profile-container {
     width: 90%;
     padding: 30px 20px;
@@ -131,8 +132,10 @@ button:hover {
 }
 </style>
 </head>
-
 <body>
+
+<!-- Stars layer -->
+<div class="stars" id="starsContainer"></div>
 
 <div class="profile-container">
   <div class="profile-title">Student Profile</div>
@@ -153,6 +156,21 @@ button:hover {
 </div>
 
 <script>
+// Generate stars dynamically
+const starsContainer = document.getElementById("starsContainer");
+const starCount = 150; // number of stars
+for (let i = 0; i < starCount; i++) {
+  const star = document.createElement("div");
+  star.classList.add("star");
+  star.style.top = Math.random() * 200 + "vh";
+  star.style.left = Math.random() * 200 + "vw";
+  star.style.width = Math.random() * 2 + 1 + "px";
+  star.style.height = star.style.width;
+  star.style.opacity = Math.random() * 0.8 + 0.2;
+  starsContainer.appendChild(star);
+}
+
+// Firebase setup
 const firebaseConfig = {
   apiKey: "AIzaSyAal-tUtavmqhKDGfY5ETXTanvBoieN304",
   authDomain: "student-document-request-4cd93.firebaseapp.com",
