@@ -18,7 +18,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #0a1f44; /* dark blue */
+  background: #0a1f44;
   overflow: hidden;
   position: relative;
 }
@@ -94,7 +94,7 @@ h2, p {
 /* Buttons */
 button {
   width: 100%;
-  padding: 12px 20px;
+  padding: 14px 20px;
   margin-top: 15px;
   font-size: 16px;
   border: none;
@@ -112,22 +112,25 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* Mobile responsive */
-@media screen and (max-width: 500px) {
+/* MOBILE RESPONSIVE ENHANCED */
+@media screen and (max-width: 600px) {
   .profile-container {
-    width: 90%;
-    padding: 30px 20px;
+    width: 95%;
+    padding: 50px 25px;
   }
   .profile-title {
-    font-size: 24px;
+    font-size: 26px;
   }
   .profile-pic {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
   }
   #usernameInput, button {
-    font-size: 15px;
-    padding: 10px;
+    font-size: 17px;
+    padding: 14px;
+  }
+  h2, p {
+    font-size: 16px;
   }
 }
 </style>
@@ -158,13 +161,13 @@ button:hover {
 <script>
 // Generate stars dynamically
 const starsContainer = document.getElementById("starsContainer");
-const starCount = 150; // number of stars
+const starCount = 200; // increased for mobile
 for (let i = 0; i < starCount; i++) {
   const star = document.createElement("div");
   star.classList.add("star");
   star.style.top = Math.random() * 200 + "vh";
   star.style.left = Math.random() * 200 + "vw";
-  star.style.width = Math.random() * 2 + 1 + "px";
+  star.style.width = Math.random() * 3 + 1 + "px";
   star.style.height = star.style.width;
   star.style.opacity = Math.random() * 0.8 + 0.2;
   starsContainer.appendChild(star);
