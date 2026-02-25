@@ -10,59 +10,55 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
-/* Basic reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Galaxy background */
+/* Body with blue gradient and starry background */
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
-  background: radial-gradient(ellipse at bottom, #0a1f44 0%, #000018 100%);
-  overflow: hidden;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  background: linear-gradient(to bottom, #0a1f44, #1a3b70); /* dark to light blue */
   position: relative;
+  overflow: hidden;
 }
 
-/* Small stars */
-body::after {
+/* Stars in the background */
+body::before {
   content: "";
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 200%;
+  height: 200%;
   background: transparent;
   box-shadow:
-    50px 100px white, 150px 200px white, 250px 50px white,
-    350px 300px white, 450px 150px white, 550px 400px white,
-    650px 50px white, 750px 250px white, 850px 100px white;
+    10px 20px #a0c4ff, 50px 80px #cce7ff, 90px 40px #a0c4ff, 130px 160px #cce7ff,
+    180px 60px #a0c4ff, 220px 200px #cce7ff, 270px 90px #a0c4ff, 310px 180px #cce7ff,
+    360px 40px #a0c4ff, 400px 150px #cce7ff, 450px 70px #a0c4ff, 500px 220px #cce7ff,
+    550px 50px #a0c4ff, 600px 180px #cce7ff, 650px 120px #a0c4ff, 700px 200px #cce7ff,
+    750px 90px #a0c4ff, 800px 170px #cce7ff;
+  background-repeat: repeat;
   z-index: 0;
+  opacity: 0.7;
 }
 
 /* Profile container */
 .profile-container {
   position: relative;
   z-index: 1;
-  background: linear-gradient(135deg, #1b2a6a, #243b8c);
-  padding: 50px 30px;
+  background: rgba(255,255,255,0.95);
   border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-  width: 100%;
-  max-width: 420px;
+  padding: 40px 30px;
   text-align: center;
-  color: #fff;
+  width: 370px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 /* Title */
 .profile-title {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 25px;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+  color: #0a1f44;
+  margin-bottom: 20px;
 }
 
 /* Profile picture */
@@ -72,44 +68,42 @@ body::after {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
-  border: 3px solid #87CEFA; /* sky blue border for effect */
+  border: 3px solid #0a1f44;
 }
 
-/* Email & tracking */
+/* Email and tracking */
 h2, p {
   margin: 10px 0;
-  color: #87CEFA; /* sky blue text for accent */
-  font-weight: bold;
+  color: #0a1f44;
 }
 
-/* Centered username input */
+/* Username input */
 #usernameInput {
-  width: 80%;
-  padding: 14px;
-  margin: 20px auto;
-  display: block;
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
   border-radius: 10px;
-  border: none;
+  border: 1px solid #0a1f44;
   font-size: 16px;
-  background: rgba(255,255,255,0.95);
-  color: #0a1f44;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
 }
 
-/* Sky-blue gradient buttons */
+/* Buttons */
 button {
   width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border-radius: 12px;
+  padding: 12px 20px;
+  margin-top: 15px;
+  font-size: 16px;
   border: none;
-  background: linear-gradient(45deg, #87CEFA, #00BFFF);
+  border-radius: 10px;
+  background: linear-gradient(45deg, #87CEFA, #00BFFF); /* sky blue gradient */
   color: #0a1f44;
   cursor: pointer;
   font-weight: bold;
-  font-size: 16px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   transition: all 0.2s ease;
 }
 
@@ -120,7 +114,7 @@ button:hover {
 
 @media screen and (max-width: 400px){
   .profile-container { padding: 40px 20px; }
-  button, #usernameInput { padding: 12px; font-size: 15px; }
+  input, button { padding: 14px; font-size: 16px; }
   .profile-title { font-size: 26px; }
 }
 </style>
