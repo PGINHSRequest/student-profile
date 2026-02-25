@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Student Profile</title>
 
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -99,12 +100,13 @@ const firebaseConfig = {
   apiKey: "AIzaSyAal-tUtavmqhKDGfY5ETXTanvBoieN304",
   authDomain: "student-document-request-4cd93.firebaseapp.com",
   projectId: "student-document-request-4cd93",
-  storageBucket: "student-document-request-4cd93.firebasestorage.app",
+  storageBucket: "student-document-request-4cd93.appspot.com",
   messagingSenderId: "646537888403",
   appId: "1:646537888403:web:b9c8826a2ae92f073f4366",
   measurementId: "G-TQQ8779L4G"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
@@ -118,20 +120,26 @@ function generateTrackingNumber() {
   return `PG-${year}-${randomDigits}`;
 }
 
-// Load user info
+// Listen for auth state changes
 auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    currentUser = user;
+  if (!user) {
+    // Redirect if not logged in
+    window.location.href = "login.html";
+    return;
+  }
+
+  currentUser = user;
+
+  try {
     const userDocRef = db.collection("users").doc(user.uid);
     const userDoc = await userDocRef.get();
-
     let trackingNumber;
 
     if (userDoc.exists) {
       const data = userDoc.data();
       document.getElementById("email").innerText = data.email || user.email;
 
-      // Generate tracking number if it does not exist
+      // Generate tracking number if it doesn't exist
       if (data.trackingNumber) {
         trackingNumber = data.trackingNumber;
       } else {
@@ -148,43 +156,40 @@ auth.onAuthStateChanged(async (user) => {
     } else {
       // New user doc
       trackingNumber = generateTrackingNumber();
-
       await userDocRef.set({
         email: user.email,
         trackingNumber: trackingNumber
       });
-
       document.getElementById("email").innerText = user.email;
       document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
     }
 
-  } else {
-    window.location.href = "login.html";
+  } catch (error) {
+    console.error("Error loading user data:", error);
+    alert("Failed to load profile data.");
   }
 });
 
-// Save username to Firestore
+// Save username
 document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
   const username = document.getElementById("usernameInput").value.trim();
-
   if (!username) {
     alert("Please enter a username!");
     return;
   }
 
   try {
-    await db.collection("users").doc(currentUser.uid).update({
-      username: username
-    });
-
+    await db.collection("users").doc(currentUser.uid).set(
+      { username: username },
+      { merge: true }
+    );
     alert("Username saved successfully!");
-
   } catch (error) {
     alert("Error saving username: " + error.message);
   }
 });
 
-// Proceed to homepage
+// Go to homepage
 document.getElementById("homepageBtn").addEventListener("click", () => {
   window.location.href = "https://pginhsrequest.wordpress.com/";
 });
