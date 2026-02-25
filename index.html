@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Profile</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #89cfff, #fff47f);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.profile-container {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 370px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.profile-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0a1f44;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid #0a1f44;
+}
+
+h2, p {
+  margin: 10px 0;
+  color: #0a1f44;
+}
+
+input[type="text"] {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #0a1f44;
+  font-size: 16px;
+}
+
+button {
+  padding: 12px 20px;
+  margin-top: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #0a1f44;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00214d;
+}
+</style>
+</head>
+
+<body>
+
+<div class="profile-container">
+  <div class="profile-title">Student Profile</div>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+       id="profilePic"
+       class="profile-pic"
+       alt="Student Account Icon">
+
+  <h2 id="email">Email</h2>
+  <p id="tracking">Tracking Number</p>
+
+  <input type="text" id="usernameInput" placeholder="Enter Username">
+
+  <button id="saveUsernameBtn">Save Username</button>
+  <button id="homepageBtn">Proceed to Homepage</button>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAal-tUtavmqhKDGfY5ETXTanvBoieN304",
+  authDomain: "student-document-request-4cd93.firebaseapp.com",
+  projectId: "student-document-request-4cd93",
+  storageBucket: "student-document-request-4cd93.firebasestorage.app",
+  messagingSenderId: "646537888403",
+  appId: "1:646537888403:web:b9c8826a2ae92f073f4366",
+  measurementId: "G-TQQ8779L4G"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+let currentUser;
+
+// Function to generate unique tracking number
+function generateTrackingNumber() {
+  const randomDigits = Math.floor(1000 + Math.random() * 9000);
+  const year = new Date().getFullYear();
+  return `PG-${year}-${randomDigits}`;
+}
+
+// Load user info
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    currentUser = user;
+    const userDocRef = db.collection("users").doc(user.uid);
+    const userDoc = await userDocRef.get();
+
+    let trackingNumber;
+
+    if (userDoc.exists) {
+      const data = userDoc.data();
+      document.getElementById("email").innerText = data.email || user.email;
+
+      // Generate tracking number if it does not exist
+      if (data.trackingNumber) {
+        trackingNumber = data.trackingNumber;
+      } else {
+        trackingNumber = generateTrackingNumber();
+        await userDocRef.set({ trackingNumber: trackingNumber }, { merge: true });
+      }
+
+      document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
+
+      if (data.username) {
+        document.getElementById("usernameInput").value = data.username;
+      }
+
+    } else {
+      // New user doc
+      trackingNumber = generateTrackingNumber();
+
+      await userDocRef.set({
+        email: user.email,
+        trackingNumber: trackingNumber
+      });
+
+      document.getElementById("email").innerText = user.email;
+      document.getElementById("tracking").innerText = "Tracking: " + trackingNumber;
+    }
+
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+// Save username to Firestore
+document.getElementById("saveUsernameBtn").addEventListener("click", async () => {
+  const username = document.getElementById("usernameInput").value.trim();
+
+  if (!username) {
+    alert("Please enter a username!");
+    return;
+  }
+
+  try {
+    await db.collection("users").doc(currentUser.uid).update({
+      username: username
+    });
+
+    alert("Username saved successfully!");
+
+  } catch (error) {
+    alert("Error saving username: " + error.message);
+  }
+});
+
+// Proceed to homepage
+document.getElementById("homepageBtn").addEventListener("click", () => {
+  window.location.href = "https://pginhsrequest.wordpress.com/";
+});
+</script>
+
+</body>
+</html>
