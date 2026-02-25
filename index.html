@@ -30,16 +30,16 @@ body {
     align-items: center;
 }
 
-/* Decorative hole / arch with lace-like design in different shade of orange */
+/* Decorative hole / arch with pastel inner and darker orange border */
 .wrapper::before {
     content: "";
     position: absolute;
     top: -80px;
     width: 220px;
     height: 100px;
-    background: #0a1f44;
+    background: #FFD8A6; /* pastel orange inner */
     border-radius: 50% 50% 0 0;
-    border: 4px solid #FFA500; /* medium orange shade */
+    border: 4px solid #FFA500; /* darker orange border */
     box-shadow: 0 0 15px rgba(255,165,0,0.5);
     z-index: 2;
 }
@@ -97,15 +97,15 @@ h2, p {
     text-align: center;
 }
 
-/* Buttons with pastel colors */
+/* Buttons with pastel colors + thin dark blue border */
 button {
     width: 90%;
     padding: 15px;
     margin-top: 15px;
     font-size: 16px;
-    border: none;
+    border: 2px solid #0a1f44; /* thin dark blue border */
     border-radius: 12px;
-    background: linear-gradient(45deg, #A2D5F2, #FFF5BA); /* pastel blue → pastel yellow */
+    background: linear-gradient(45deg, #A2D5F2, #FFF5BA); /* pastel gradient */
     color: #0a1f44;
     cursor: pointer;
     font-weight: bold;
@@ -113,7 +113,7 @@ button {
     transition: all 0.25s ease;
 }
 button:hover {
-    background: linear-gradient(45deg, #8AC4E9, #FFF1A8); /* slightly different pastel shade on hover */
+    background: linear-gradient(45deg, #8AC4E9, #FFF1A8); /* slightly lighter pastel on hover */
     transform: translateY(-2px);
 }
 
