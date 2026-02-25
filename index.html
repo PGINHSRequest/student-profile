@@ -30,23 +30,23 @@ body {
     align-items: center;
 }
 
-/* Decorative hole / arch with lace-like design */
+/* Decorative hole / arch with lace-like design in different shade of orange */
 .wrapper::before {
     content: "";
     position: absolute;
-    top: -80px; /* above profile box */
+    top: -80px;
     width: 220px;
     height: 100px;
     background: #0a1f44;
     border-radius: 50% 50% 0 0;
-    border: 4px solid #FF8C00; /* orange lace border */
-    box-shadow: 0 0 15px rgba(255,140,0,0.5);
+    border: 4px solid #FFA500; /* medium orange shade */
+    box-shadow: 0 0 15px rgba(255,165,0,0.5);
     z-index: 2;
 }
 
 /* Profile box with pastel yellow → pastel blue gradient */
 .profile-container {
-    background: linear-gradient(135deg, #FFF8B5, #B3D9FF); 
+    background: linear-gradient(135deg, #FFF8B5, #B3D9FF);
     border-radius: 25px;
     padding: 45px 35px;
     text-align: center;
@@ -97,7 +97,7 @@ h2, p {
     text-align: center;
 }
 
-/* Buttons: solid dark blue with hover lighter blue */
+/* Buttons with pastel colors */
 button {
     width: 90%;
     padding: 15px;
@@ -105,15 +105,15 @@ button {
     font-size: 16px;
     border: none;
     border-radius: 12px;
-    background: #0a1f44; /* solid dark blue */
-    color: #fff;
+    background: linear-gradient(45deg, #A2D5F2, #FFF5BA); /* pastel blue → pastel yellow */
+    color: #0a1f44;
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0 6px 18px rgba(0,0,0,0.25);
     transition: all 0.25s ease;
 }
 button:hover {
-    background: #1E2F66; /* lighter blue on hover */
+    background: linear-gradient(45deg, #8AC4E9, #FFF1A8); /* slightly different pastel shade on hover */
     transform: translateY(-2px);
 }
 
