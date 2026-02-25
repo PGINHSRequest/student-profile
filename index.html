@@ -10,110 +10,101 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
-body {
+/* Basic reset */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Galaxy background */
+body {
   font-family: Arial, sans-serif;
-  background: #0a1f44;
+  background: radial-gradient(ellipse at bottom, #0a1f44 0%, #000018 100%);
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  overflow: hidden;
   position: relative;
 }
 
-/* Scientific background using CSS circles and lines */
-body::before {
+/* Small stars */
+body::after {
   content: "";
   position: absolute;
-  width: 100%; height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.05) 2px, transparent 2px) repeat;
-  background-size: 60px 60px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  box-shadow:
+    50px 100px white, 150px 200px white, 250px 50px white,
+    350px 300px white, 450px 150px white, 550px 400px white,
+    650px 50px white, 750px 250px white, 850px 100px white;
   z-index: 0;
 }
 
-.helix {
-  position: absolute;
-  width: 2px;
-  height: 100%;
-  left: 20%;
-  background: repeating-linear-gradient(
-    to bottom,
-    cyan 0px,
-    cyan 4px,
-    transparent 4px,
-    transparent 8px
-  );
-  animation: moveHelix 6s linear infinite;
-  opacity: 0.3;
-}
-.helix:nth-child(2) {
-  left: 40%;
-  background: repeating-linear-gradient(to bottom, magenta 0 3px, transparent 3px 6px);
-}
-.helix:nth-child(3) {
-  left: 60%;
-  background: repeating-linear-gradient(to bottom, yellow 0 5px, transparent 5px 10px);
-}
-
-@keyframes moveHelix {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-60px); }
-}
-
+/* Profile container */
 .profile-container {
   position: relative;
   z-index: 1;
-  background: linear-gradient(135deg, #89cfff, #fff47f);
+  background: linear-gradient(135deg, #1b2a6a, #243b8c);
   padding: 50px 30px;
   border-radius: 20px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.5);
   width: 100%;
   max-width: 420px;
   text-align: center;
-  color: #0a1f44;
+  color: #fff;
 }
 
+/* Title */
 .profile-title {
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 25px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 }
 
+/* Profile picture */
 .profile-pic {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
-  border: 3px solid #0a1f44;
+  border: 3px solid #87CEFA; /* sky blue border for effect */
 }
 
+/* Email & tracking */
 h2, p {
   margin: 10px 0;
-  color: #0a1f44;
+  color: #87CEFA; /* sky blue text for accent */
+  font-weight: bold;
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 16px;
-  margin: 12px 0;
-  border-radius: 12px;
+/* Centered username input */
+#usernameInput {
+  width: 80%;
+  padding: 14px;
+  margin: 20px auto;
+  display: block;
+  border-radius: 10px;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   background: rgba(255,255,255,0.95);
   color: #0a1f44;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
+/* Sky-blue gradient buttons */
 button {
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   margin-top: 12px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(45deg, #FFD700, #FFA500);
+  background: linear-gradient(45deg, #87CEFA, #00BFFF);
   color: #0a1f44;
   cursor: pointer;
   font-weight: bold;
@@ -123,24 +114,19 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(45deg, #FFC700, #FF8C00);
+  background: linear-gradient(45deg, #00BFFF, #1E90FF);
   transform: translateY(-2px);
 }
 
 @media screen and (max-width: 400px){
   .profile-container { padding: 40px 20px; }
-  input, button { padding: 14px; font-size: 16px; }
+  button, #usernameInput { padding: 12px; font-size: 15px; }
   .profile-title { font-size: 26px; }
 }
 </style>
 </head>
 
 <body>
-
-<!-- Helix lines -->
-<div class="helix"></div>
-<div class="helix"></div>
-<div class="helix"></div>
 
 <div class="profile-container">
   <div class="profile-title">Student Profile</div>
