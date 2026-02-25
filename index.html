@@ -13,7 +13,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #89cfff, #fff47f);
+  background: linear-gradient(135deg, #0a1f44, #001f3f); /* dark blue gradient */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,18 +21,18 @@ body {
 }
 
 .profile-container {
-  background: rgba(255,255,255,0.95);
-  border-radius: 20px;
+  background: linear-gradient(135deg, #0a1f44, #00214d); /* darker blue container */
   padding: 40px 30px;
+  border-radius: 20px;
   text-align: center;
   width: 370px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  color: #fff;
 }
 
 .profile-title {
   font-size: 28px;
   font-weight: bold;
-  color: #0a1f44;
   margin-bottom: 20px;
 }
 
@@ -42,12 +42,12 @@ body {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
-  border: 3px solid #0a1f44;
+  border: 3px solid #fff;
 }
 
 h2, p {
   margin: 10px 0;
-  color: #0a1f44;
+  color: #fff;
 }
 
 input[type="text"] {
@@ -55,23 +55,27 @@ input[type="text"] {
   padding: 12px;
   margin: 10px 0;
   border-radius: 10px;
-  border: 1px solid #0a1f44;
+  border: none;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 button {
-  padding: 12px 20px;
-  margin-top: 15px;
+  width: 90%;
+  padding: 12px 0;
+  margin-top: 10px;
   font-size: 16px;
   border: none;
   border-radius: 10px;
-  background: #0a1f44;
+  background: #ff7f50; /* contrasting button color */
   color: #fff;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background: #00214d;
+  background: #ff6347;
 }
 </style>
 </head>
@@ -93,6 +97,7 @@ button:hover {
 
   <button id="saveUsernameBtn">Save Username</button>
   <button id="homepageBtn">Proceed to Homepage</button>
+  <button id="logoutBtn">Log Out</button>
 </div>
 
 <script>
@@ -124,7 +129,7 @@ function generateTrackingNumber() {
 auth.onAuthStateChanged(async (user) => {
   if (!user) {
     // Redirect if not logged in
-    window.location.href = "login.html";
+    window.location.href = "https://pginhsrequest.github.io/login/";
     return;
   }
 
@@ -139,7 +144,6 @@ auth.onAuthStateChanged(async (user) => {
       const data = userDoc.data();
       document.getElementById("email").innerText = data.email || user.email;
 
-      // Generate tracking number if missing
       if (data.trackingNumber) {
         trackingNumber = data.trackingNumber;
       } else {
@@ -154,7 +158,6 @@ auth.onAuthStateChanged(async (user) => {
       }
 
     } else {
-      // New user
       trackingNumber = generateTrackingNumber();
       await userDocRef.set({
         email: user.email,
@@ -192,6 +195,15 @@ document.getElementById("saveUsernameBtn").addEventListener("click", async () =>
 // Redirect to homepage
 document.getElementById("homepageBtn").addEventListener("click", () => {
   window.location.href = "https://pginhsrequest.wordpress.com/";
+});
+
+// Log out
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  auth.signOut().then(() => {
+    window.location.href = "https://pginhsrequest.github.io/login/";
+  }).catch(error => {
+    alert("Error logging out: " + error.message);
+  });
 });
 </script>
 
