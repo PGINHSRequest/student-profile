@@ -13,21 +13,24 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0a1f44, #001f3f); /* dark blue gradient */
+  background: #0a1f44; /* dark blue background */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 10px;
 }
 
 .profile-container {
-  background: linear-gradient(135deg, #0a1f44, #00214d); /* darker blue container */
-  padding: 40px 30px;
-  border-radius: 20px;
-  text-align: center;
-  width: 370px;
+  background: linear-gradient(135deg, #89cfff, #fff47f); /* same gradient as login box */
+  padding: 50px 30px;
+  border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  color: #fff;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-sizing: border-box;
+  color: #0a1f44;
 }
 
 .profile-title {
@@ -42,32 +45,33 @@ body {
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
-  border: 3px solid #fff;
+  border: 3px solid #0a1f44;
 }
 
 h2, p {
   margin: 10px 0;
-  color: #fff;
+  color: #0a1f44;
 }
 
 input[type="text"] {
-  width: 90%;
-  padding: 12px;
-  margin: 10px 0;
+  width: 100%;
+  padding: 16px;
+  margin: 12px 0;
   border-radius: 10px;
   border: none;
-  font-size: 16px;
   box-sizing: border-box;
+  font-size: 18px;
+  background: rgba(255,255,255,0.9);
+  color: #0a1f44;
 }
 
 button {
-  width: 90%;
-  padding: 12px 0;
-  margin-top: 10px;
-  font-size: 16px;
-  border: none;
+  width: 100%;
+  padding: 16px;
+  margin-top: 12px;
   border-radius: 10px;
-  background: #ff7f50; /* contrasting button color */
+  border: none;
+  background: #0a1f44;
   color: #fff;
   cursor: pointer;
   font-weight: bold;
@@ -75,7 +79,13 @@ button {
 }
 
 button:hover {
-  background: #ff6347;
+  background: #00214d;
+}
+
+@media screen and (max-width: 400px){
+  .profile-container { padding: 40px 20px; }
+  input, button { padding: 14px; font-size: 16px; }
+  .profile-title { font-size: 26px; }
 }
 </style>
 </head>
@@ -128,7 +138,6 @@ function generateTrackingNumber() {
 // Listen for authentication state
 auth.onAuthStateChanged(async (user) => {
   if (!user) {
-    // Redirect if not logged in
     window.location.href = "https://pginhsrequest.github.io/login/";
     return;
   }
